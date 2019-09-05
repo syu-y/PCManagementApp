@@ -22,38 +22,59 @@
                                 </div>
                             </td>
                         </tr>
+                        <!-- 用途表示 -->
                         <tr>
                             <th class="active">用途</th>
                             <td><div class="form-group" th:classappend="${#fields.hasErrors('purpose')} ? 'has-error' ">
-                                <select sec:authorize="isAuthenticated() and hasAuthority('ADMIN')" type="text" class="form-control" th:field="*{purpose}">
-                                <select sec:authorize="isAuthenticated() and hasAuthority('USER')" type="text" class="form-control" th:field="*{purpose}" readonly="readonly">
-                                    <option value="R&D">R&D用</option>
-                                    <option value="研修用">研修用</option>
+                                <!-- USER権限 -->
+                                <select sec:authorize="isAuthenticated() and hasAuthority('USER')" type="text" class="form-control" id="purpose" name="purpose" disabled>
+                                    <option value="R&D" th:selected="${pcEditForm.purpose}=='R&D'">R&D用</option>
+                                    <option value="研修用" th:selected="${pcEditForm.purpose}=='研修用'">研修用</option>
+                                </select>
+                                <!-- ADMIN権限 -->
+                                <select sec:authorize="isAuthenticated() and hasAuthority('ADMIN')" type="text" class="form-control" id="purpose" name="purpose">
+                                    <option value="R&D" th:selected="${pcEditForm.purpose}=='R&D'">R&D用</option>
+                                    <option value="研修用" th:selected="${pcEditForm.purpose}=='研修用'">研修用</option>
                                 </select>
                                 <span class="text-danger" th:if="${#fields.hasErrors('purpose')}" th:errors="*{purpose}">エラー</span>
                             </div></td>
                         </tr>
+                        <!-- 状態表示 -->
                         <tr>
                             <th class="active">状態</th>
                             <td>
-                                <select sec:authorize="isAuthenticated() and hasAuthority('ADMIN')"  type="text" name="state" class="form-control" th:field="*{state}">
-                                <select sec:authorize="isAuthenticated() and hasAuthority('USER')" type="text" name="state" class="form-control" th:field="*{state}" readonly="readonly">
-                                    <option value="未使用" selected>未使用</option>
-                                    <option value="登録中" >登録中</option>
-                                    <option value="使用中" >使用中</option>
-                                    <option value="廃棄" >廃棄</option>
+                                <div class="form-group" th:classappend="${#fields.hasErrors('state')} ? 'has-error' ">
+                                <!-- USER権限 -->
+                                <select sec:authorize="isAuthenticated() and hasAuthority('USER')" type="text" class="form-control" id="state" name="state" disabled>
+                                    <option value="未使用" th:selected="${pcEditForm.state}=='未使用'">未使用</option>
+                                    <option value="登録中" th:selected="${pcEditForm.state}=='登録中'">登録中</option>
+                                    <option value="使用中" th:selected="${pcEditForm.state}=='使用中'">使用中</option>
+                                    <option value="廃棄" th:selected="${pcEditForm.state}=='廃棄'">廃棄</option>
                                 </select>
-                            </td>
+                                <!-- ADMIN権限 -->
+                                <select sec:authorize="isAuthenticated() and hasAuthority('ADMIN')"  type="text" class="form-control" id="state" name="state">
+                                    <option value="未使用" th:selected="${pcEditForm.state}=='未使用'">未使用</option>
+                                    <option value="登録中" th:selected="${pcEditForm.state}=='登録中'">登録中</option>
+                                    <option value="使用中" th:selected="${pcEditForm.state}=='使用中'">使用中</option>
+                                    <option value="廃棄" th:selected="${pcEditForm.state}=='廃棄'">廃棄</option>
+                                </select>
+                                <span class="text-danger" th:if="${#fields.hasErrors('state')}" th:errors="*{state}">エラー</span>
+                            </div></td>
                         </tr>
+                        <!-- ユーザ名表示 -->
                         <tr>
                             <th class="active">ユーザ名</th>
+                            <!-- USER権限 -->
+                            <td sec:authorize="isAuthenticated() and hasAuthority('USER')">
+                                <input type="text" class="form-control" th:field="*{userName}" readonly="readonly"/>
+                            </td>
+                            <!-- ADMIN権限 -->
                             <td sec:authorize="isAuthenticated() and hasAuthority('ADMIN')">
-                                <select type="text" class="form-control" th:field="*{userId}" >
+                                <select type="text" class="form-control" id="userId" name="userId">
                                     <option th:value="null" th:inline="text">使用者なし</option>
-                                    <option th:each="user : ${userList}" th:value="${user.userId}" th:inline="text">[[${user.userName}]]</option>
+                                    <option th:each="user : ${userList}" th:value="${user.userId}" th:inline="text" th:selected="${user.userId} == *{userId}">[[${user.userName}]]</option>
                                 </select>
                             </td>
-                            <td sec:authorize="isAuthenticated() and hasAuthority('USER')" th:text="${pcEditForm.userName}"></td>
                         </tr>
                     </table>
                     <button sec:authorize="isAuthenticated() and hasAuthority('ADMIN')"  class="btn btn-primary btn-lg pull-right" type="submit" name="update">更新</button>

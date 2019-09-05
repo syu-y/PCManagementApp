@@ -207,6 +207,7 @@ public class HomeController{
                     RentalLog log = new RentalLog();
                     log.setPcId(pc.getPcId());
                     log.setUserId(pc.getUserId());
+                    log.setUserId(pc.getUserId());
                     log.setStartDate(today);
                     log.setEndDate(null);
                     rentalLogService.addRentalLog(log);
@@ -222,13 +223,16 @@ public class HomeController{
                         //　前の使用者は返却処理
                         log.setEndDate(today);
                         rentalLogService.addRentalLog(log);
-                        //　新しい使用者のログ作成
-                        RentalLog newLog = new RentalLog();
-                        newLog.setPcId(pc.getPcId());
-                        newLog.setUserId(pc.getUserId());
-                        newLog.setStartDate(today);
-                        newLog.setEndDate(null);
-                        rentalLogService.addRentalLog(newLog);
+                        if(pc.getUserId() != null){
+                            //　新しい使用者のログ作成
+                            RentalLog newLog = new RentalLog();
+                            newLog.setPcId(pc.getPcId());
+                            newLog.setUserId(pc.getUserId());
+                            newLog.setStartDate(today);
+                            newLog.setEndDate(null);
+                            rentalLogService.addRentalLog(newLog);
+                            break;
+                        }
                         break;
                     }
                 }
